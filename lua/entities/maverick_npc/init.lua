@@ -21,6 +21,7 @@ end
 
 function ENT:AcceptInput( name, activator, caller )
 	if name == "Use" and caller:IsPlayer() then
+		activator:EmitSound("vo/npc/male01/hi01.wav",self:GetPos())
 		umsg.Start("ShopUsed", caller)
 		umsg.End()
 	end

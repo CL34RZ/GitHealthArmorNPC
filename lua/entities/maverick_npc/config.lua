@@ -1,7 +1,9 @@
 ----Configuration Below----
-MavNPCModel = "models/Barney.mdl"-- Make sure this model is fully animated or it will show as a T-Posed Model!
+MavNPCModel = "models/Kleiner.mdl"-- Make sure this model is fully animated or it will show as a T-Posed Model!
 ---------------------------
-MavPanelColor = Color(29,226,163,150) -- Decides what colour the main popup is, The last value is the opacity (wether or not it's see-through 0 - Invisible, 255 - Solid Color)
+MavPanelColor = Color(120,120,120) -- Decides what colour the main popup is
+---------------------------
+MavPanelBorder = Color(0,0,0) -- Decides the color of the border surrounding the main panel
 ---------------------------
 MavHealthCost = 5000 -- How much health will cost
 ---------------------------
