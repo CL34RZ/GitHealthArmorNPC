@@ -42,6 +42,7 @@ function BuyHealth(length, activator)
 	activator:addMoney(-MavHealthCost)
 	activator:SetHealth(MavMaxHealth)
 	DarkRP.notify(activator, 1, 4, "You have purchased health for " .. GAMEMODE.Config.currency ..  MavHealthCost .. "!")
+	hook.Run("Maverick_BuyHealth", activator, MavHealthCost)
     end
 
     if activator:Health() == MavMaxHealth then
@@ -62,6 +63,7 @@ function BuyArmor(length, activator)
 	activator:addMoney(-MavArmorCost)
 	activator:SetArmor(MavMaxArmor)
 	DarkRP.notify(activator, 1, 4, "You have purchased Armor for " .. GAMEMODE.Config.currency ..  MavArmorCost .. "!")
+	hook.Run("Maverick_BuyArmor", activator, MavArmorCost)
     end
 
     if activator:Armor() == MavMaxArmor then
