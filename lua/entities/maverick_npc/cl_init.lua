@@ -117,4 +117,4 @@ function NPCMenu()
 	end
 
 end
-usermessage.Hook("ShopUsed", NPCMenu)
+net.Receive("mavshop", NPCMenu)

@@ -3,6 +3,7 @@ AddCSLuaFile("shared.lua")
 AddCSLuaFile("config.lua")
 util.AddNetworkString("mavgivehealth")
 util.AddNetworkString("mavgivearmor")
+util.AddNetworkString("mavshop")
 
 include("config.lua")
 include("shared.lua")
@@ -22,8 +23,8 @@ end
 function ENT:AcceptInput( name, activator, caller )
 	if name == "Use" and caller:IsPlayer() then
 		activator:EmitSound("vo/npc/male01/hi01.wav",self:GetPos())
-		umsg.Start("ShopUsed", caller)
-		umsg.End()
+		net.Start("mavshop")
+		net.Send(caller)
 	end
 end
 
