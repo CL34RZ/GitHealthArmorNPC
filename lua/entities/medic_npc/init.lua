@@ -16,6 +16,7 @@ function ENT:Initialize( )
 	self:SetNPCState( NPC_STATE_SCRIPT )
 	self:SetSolid( SOLID_BBOX )
 	self:CapabilitiesAdd( CAP_ANIMATEDFACE )
+	self:CapabilitiesAdd( CAP_TURN_HEAD )
 	self:SetUseType( SIMPLE_USE )
 	self:DropToFloor()
 end
@@ -34,20 +35,18 @@ end
 
 function BuyHealth(length, activator)
     
- 	if not activator:canAfford(MavHealthCost) then
-	DarkRP.notify(activator, 1, 4, "You need more money!")
-	return ""
+ 	if ! activator:canAfford(MavHealthCost) then
+		DarkRP.notify(activator, 1, 4, "You need more money!")
+		return ""
 	end 
 
 	if activator:Health() < MavMaxHealth then
-	activator:addMoney(-MavHealthCost)
-	activator:SetHealth(MavMaxHealth)
-	DarkRP.notify(activator, 1, 4, "You have purchased health for " .. GAMEMODE.Config.currency ..  MavHealthCost .. "!")
-	hook.Run("Maverick_BuyHealth", activator, MavHealthCost)
-    end
-
-    if activator:Health() == MavMaxHealth then
-    	DarkRP.notify(activator, 1, 4, "You already have full health!")
+		activator:addMoney(-MavHealthCost)
+		activator:SetHealth(MavMaxHealth)
+		DarkRP.notify(activator, 0, 4, "You have purchased health for " .. GAMEMODE.Config.currency ..  MavHealthCost .. "!")
+		hook.Run("Maverick_BuyHealth", activator, MavHealthCost)
+    else
+    	DarkRP.notify(activator,1,4,"You have full health!")
     end
 
 end
@@ -55,20 +54,18 @@ net.Receive("mavgivehealth", BuyHealth)
 
 function BuyArmor(length, activator)
     
- 	if not activator:canAfford(MavArmorCost) then
-	DarkRP.notify(activator, 1, 4, "You need more money!")
-	return ""
+ 	if ! activator:canAfford(MavArmorCost) then
+		DarkRP.notify(activator, 1, 4, "You need more money!")
+		return ""
 	end 
 
 	if activator:Armor() < MavMaxArmor then
-	activator:addMoney(-MavArmorCost)
-	activator:SetArmor(MavMaxArmor)
-	DarkRP.notify(activator, 1, 4, "You have purchased Armor for " .. GAMEMODE.Config.currency ..  MavArmorCost .. "!")
-	hook.Run("Maverick_BuyArmor", activator, MavArmorCost)
-    end
-
-    if activator:Armor() == MavMaxArmor then
-	DarkRP.notify(activator, 1, 4, "You already have full armor!")
+		activator:addMoney(-MavArmorCost)
+		activator:SetArmor(MavMaxArmor)
+		DarkRP.notify(activator, 0, 4, "You have purchased Armor for " .. GAMEMODE.Config.currency ..  MavArmorCost .. "!")
+		hook.Run("Maverick_BuyArmor", activator, MavArmorCost)
+    else
+    	DarkRP.notify(activator,1,4,"You have full armor!")
     end
 end
 net.Receive("mavgivearmor", BuyArmor)

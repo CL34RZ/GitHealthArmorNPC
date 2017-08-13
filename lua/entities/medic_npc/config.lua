@@ -1,5 +1,5 @@
 ----Configuration Below----
-MavNPCModel = "models/Kleiner.mdl"-- Make sure this model is fully animated or it will show as a T-Posed Model!
+MavNPCModel = "models/Humans/Group03m/male_09.mdl"-- Make sure this model is fully animated or it will show as a T-Posed Model!
 ---------------------------
 MavPanelColor = Color(120,120,120) -- Decides what colour the main popup is
 ---------------------------

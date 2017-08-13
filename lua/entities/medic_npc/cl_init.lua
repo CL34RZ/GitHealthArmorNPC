@@ -3,51 +3,40 @@ include("shared.lua")
 
 function ENT:Initialize()
 	self.AutomaticFrameAdvance = true
-	end
+end
 
-surface.CreateFont( "MaverickFont", {
-	font = "Arial",
-	extended = false,
-	size = 25,
-	weight = 10,
-	blursize = 0,
-	scanlines = 0,
-	antialias = true,
-	underline = false,
-	italic = true,
-	strikeout = false,
-	symbol = false,
-	rotary = false,
-	shadow = false,
-	additive = false,
-} )
+surface.CreateFont("MaverickFont", {
+	size = 55,
+	font = "Impact",
+	antialias = true
+})
 
 function ENT:Draw()
 	self.Entity:DrawModel()
 
-	for k, ent in pairs (ents.FindByClass("maverick_npc")) do
-		local Ang = ent:GetAngles()
+	local pos = self:GetPos()
+	local ang = self:GetAngles()
+	local distance = LocalPlayer():GetPos():Distance(pos) < 500
 
-		Ang:RotateAroundAxis( Ang:Forward(), 90)
-		Ang:RotateAroundAxis( Ang:Right(), -90)
+	ang:RotateAroundAxis(ang:Up(),90)
+	ang:RotateAroundAxis(ang:Forward(),90)
 
-	cam.Start3D2D(ent:GetPos()+ent:GetUp()*77, Ang, 0.20)
-
-	draw.SimpleTextOutlined("Medic", "MaverickFont", 0,0, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color(0,0,0,255))
-
-	Ang:RotateAroundAxis( Ang:Right(), -180)
-		
-		cam.Start3D2D(ent:GetPos()+ent:GetUp()*80, Ang, 0.20)
-			draw.SimpleTextOutlined("Medic", "MaverickFont", 0, 0, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color(0, 0, 0, 255))
+	if distance then
+		cam.Start3D2D(pos+ang:Up(),ang,0.1)
+			draw.RoundedBox(4,0-70,0-775,140,54,Color(0,0,0))
+			draw.RoundedBox(4,0-68,0-773,136,50,Color(255,255,255))
+			draw.SimpleText("Medic","MaverickFont",0,-750,Color(0,0,0),1,1)
 		cam.End3D2D()
 
-	cam.End3D2D()
+		ang:RotateAroundAxis(ang:Right(),-180)
 
+		cam.Start3D2D(pos+ang:Up()*-1,ang,0.1)
+			draw.SimpleText("Medic","MaverickFont",0,-750,Color(0,0,0),1,1)
+		cam.End3D2D()
 	end
 end
 
 function NPCMenu()
-
 	local NPCPanel = vgui.Create("DFrame")
 	NPCPanel:SetSize(400,165)
 	NPCPanel:SetDraggable(false)
@@ -100,7 +89,7 @@ function NPCMenu()
 	MavButton.Paint = function(self,w,h)
 		draw.RoundedBox(8,0,0,w,h,Color(0,0,0,0))
 	end
-	MavButton.DoClick = function(caller)
+	MavButton.DoClick = function()
 		gui.OpenURL("http://steamcommunity.com/id/Blalerina")
 	end
 
@@ -115,6 +104,5 @@ function NPCMenu()
 	CloseButton.DoClick = function()
 		NPCPanel:Close()
 	end
-
 end
 net.Receive("mavshop", NPCMenu)
