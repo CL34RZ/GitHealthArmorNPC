@@ -1,5 +1,6 @@
 include("config.lua")
 include("shared.lua")
+include("languages.lua")
 
 function ENT:Initialize()
 	self.AutomaticFrameAdvance = true
@@ -23,15 +24,25 @@ function ENT:Draw()
 
 	if distance then
 		cam.Start3D2D(pos+ang:Up(),ang,0.1)
-			draw.RoundedBox(4,0-70,0-775,140,54,Color(0,0,0))
-			draw.RoundedBox(4,0-68,0-773,136,50,Color(255,255,255))
-			draw.SimpleText("Medic","MaverickFont",0,-750,Color(0,0,0),1,1)
+			if not MedicIsFrench then
+				draw.RoundedBox(4,0-70,0-775,140,54,Color(0,0,0))
+				draw.RoundedBox(4,0-68,0-773,136,50,Color(255,255,255))
+				draw.SimpleText("Medic","MaverickFont",0,-750,Color(0,0,0),1,1)
+			else
+				draw.RoundedBox(4,0-80,0-775,160,54,Color(0,0,0))
+				draw.RoundedBox(4,0-78,0-773,156,50,Color(255,255,255))
+				draw.SimpleText("Medecin","MaverickFont",0,-750,Color(0,0,0),1,1)
+			end
 		cam.End3D2D()
 
 		ang:RotateAroundAxis(ang:Right(),-180)
 
 		cam.Start3D2D(pos+ang:Up()*-1,ang,0.1)
-			draw.SimpleText("Medic","MaverickFont",0,-750,Color(0,0,0),1,1)
+			if not MedicIsFrench then
+				draw.SimpleText("Medic","MaverickFont",0,-750,Color(0,0,0),1,1)
+			else
+				draw.SimpleText("Medecin","MaverickFont",0,-750,Color(0,0,0),1,1)
+			end
 		cam.End3D2D()
 	end
 end
@@ -47,6 +58,7 @@ function NPCMenu()
 	NPCPanel:ShowCloseButton(false)
 	NPCPanel:Center()
 		NPCPanel.Paint = function(self,w,h)
+			Derma_DrawBackgroundBlur(self)
 			draw.RoundedBox(8,0,0,w,h,MavPanelBorder)
 			draw.RoundedBox(8,2,2,w-4,h-4,MavPanelColor)
 		end
@@ -54,7 +66,11 @@ function NPCMenu()
 	local HealthButton = vgui.Create("DButton", NPCPanel)
 		HealthButton:SetPos(25,58)
 		HealthButton:SetSize(75,50)
-		HealthButton:SetText(" Health: ".. GAMEMODE.Config.currency .. MavHealthCost)
+		if not MedicIsFrench then
+			HealthButton:SetText(" Health: ".. GAMEMODE.Config.currency .. MavHealthCost)
+		else
+			HealthButton:SetText(" Santé: ".. GAMEMODE.Config.currency .. MavHealthCost)
+		end
 		HealthButton:SetTextColor(Color(255,255,255))
 		HealthButton.Paint = function(self,w,h)
 			draw.RoundedBox(0,0,0,w,h,Color(0,0,0))
@@ -69,7 +85,13 @@ function NPCMenu()
 	local ArmorButton = vgui.Create("DButton", NPCPanel)
 		ArmorButton:SetPos(300,58)
 		ArmorButton:SetSize(75,50)
-		ArmorButton:SetText(" Armor: ".. GAMEMODE.Config.currency .. MavArmorCost)
+		if not MedicIsFrench then
+			ArmorButton:SetText(" Armor: ".. GAMEMODE.Config.currency .. MavArmorCost)
+		else
+			ArmorButton:SetPos(300-25,58)
+			ArmorButton:SetSize(100,50)
+			ArmorButton:SetText(" Armure: ".. GAMEMODE.Config.currency .. MavArmorCost)
+		end
 		ArmorButton:SetTextColor(Color(255,255,255))
 		ArmorButton.Paint = function(self,w,h)
 			draw.RoundedBox(0,0,0,w,h,Color(0,0,0))
