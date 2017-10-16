@@ -26,7 +26,9 @@ end
 function ENT:AcceptInput( name, activator, caller )
 	if name == "Use" and caller:IsPlayer() then
 		if not MedicIsFrench then
-			activator:EmitSound("vo/npc/male01/hi02.wav",self:GetPos())
+			if MedicShouldSpeak then
+				activator:EmitSound("vo/npc/male01/hi02.wav",self:GetPos())
+			end
 		end
 		net.Start("mavshop")
 		net.Send(caller)
@@ -70,7 +72,7 @@ net.Receive("mavgivehealth", BuyHealth)
 
 function BuyArmor(length, activator)
     
- 	if ! activator:canAfford(MavHealthCost) then
+ 	if ! activator:canAfford(MavArmorCost) then
 		if not MedicIsFrench then
 			DarkRP.notify(activator, 1, 4, "You need more money!")
 		else
@@ -85,7 +87,7 @@ function BuyArmor(length, activator)
 		if not MedicIsFrench then
 			DarkRP.notify(activator, 0, 4, "You have purchased Armor for " .. GAMEMODE.Config.currency ..  MavArmorCost .. "!")
 		else
-			DarkRP.notify(activator, 0, 4, "Vous avez acheté de la Armure pour " .. GAMEMODE.Config.currency ..  MavArmorCost .. "!")
+			DarkRP.notify(activator, 0, 4, "Vous avez achetez de l'armure " .. GAMEMODE.Config.currency ..  MavArmorCost .. "!")
 		end
 		hook.Run("Maverick_BuyArmor", activator, MavArmorCost)
     else

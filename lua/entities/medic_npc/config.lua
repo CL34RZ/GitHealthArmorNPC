@@ -12,4 +12,6 @@ MavArmorCost = 10000 -- How much armor will cost
 MavMaxHealth = 100 -- Used if your server uses a different starting health
 ---------------------------
 MavMaxArmor = 100 -- Used if you want the maximum armor to be above 100 (Cannot be above 255)
+---------------------------
+MedicShouldSpeak = true -- Wether the medic should say "Hey" when you interact (doesn't effect french version)
 ----Configuration End------

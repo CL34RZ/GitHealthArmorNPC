@@ -11,6 +11,16 @@ surface.CreateFont("MaverickFont", {
 	font = "Impact",
 	antialias = true
 })
+surface.CreateFont("barTopInfo",{
+	size = 25,
+	font = "Arial",
+	antialias = true
+})
+surface.CreateFont("medicHeader",{
+	size = 50,
+	font = "Arial",
+	antialias = true
+})
 
 function ENT:Draw()
 	self.Entity:DrawModel()
@@ -49,27 +59,34 @@ end
 
 function NPCMenu()
 	local NPCPanel = vgui.Create("DFrame")
-	NPCPanel:SetSize(400,165)
-	NPCPanel:SetDraggable(false)
+	NPCPanel:SetSize(500,260)
+	NPCPanel:SetDraggable(true)
 	NPCPanel:SetTitle("")
 	NPCPanel:MakePopup()
 	NPCPanel:SetSizable(false)
 	NPCPanel:SetDeleteOnClose(false)
 	NPCPanel:ShowCloseButton(false)
 	NPCPanel:Center()
-		NPCPanel.Paint = function(self,w,h)
-			Derma_DrawBackgroundBlur(self)
-			draw.RoundedBox(8,0,0,w,h,MavPanelBorder)
-			draw.RoundedBox(8,2,2,w-4,h-4,MavPanelColor)
+	NPCPanel.Paint = function(self,w,h)
+		Derma_DrawBackgroundBlur(self)
+		draw.RoundedBox(8,0,0,w,h,MavPanelBorder)
+		draw.RoundedBox(8,2,2,w-4,h-4,MavPanelColor)
+		if not MedicIsFrench then
+			draw.SimpleText("Let's get you patched up then shall we?","barTopInfo",250,100,Color(255,255,255),1,1)
+			draw.SimpleTextOutlined("Medic","medicHeader",250,50,Color(255,255,255),1,1,2,Color(0,0,0))
+		else
+			draw.SimpleText("Allons-nous vous remémer, alors devons-nous?","barTopInfo",250,100,Color(255,255,255),1,1)
+			draw.SimpleTextOutlined("Medecin","medicHeader",250,50,Color(255,255,255),1,1,2,Color(0,0,0))
 		end
+	end
 
 	local HealthButton = vgui.Create("DButton", NPCPanel)
-		HealthButton:SetPos(25,58)
-		HealthButton:SetSize(75,50)
+		HealthButton:SetPos(25,175)
+		HealthButton:SetSize(125,50)
 		if not MedicIsFrench then
-			HealthButton:SetText(" Health: ".. GAMEMODE.Config.currency .. MavHealthCost)
+			HealthButton:SetText(" Health: ".. GAMEMODE.Config.currency .. string.Comma(MavHealthCost))
 		else
-			HealthButton:SetText(" Santé: ".. GAMEMODE.Config.currency .. MavHealthCost)
+			HealthButton:SetText(" Santé: ".. GAMEMODE.Config.currency .. string.Comma(MavHealthCost))
 		end
 		HealthButton:SetTextColor(Color(255,255,255))
 		HealthButton.Paint = function(self,w,h)
@@ -83,14 +100,12 @@ function NPCMenu()
 		end
 
 	local ArmorButton = vgui.Create("DButton", NPCPanel)
-		ArmorButton:SetPos(300,58)
-		ArmorButton:SetSize(75,50)
+		ArmorButton:SetPos(500-150,175)
+		ArmorButton:SetSize(125,50)
 		if not MedicIsFrench then
-			ArmorButton:SetText(" Armor: ".. GAMEMODE.Config.currency .. MavArmorCost)
+			ArmorButton:SetText(" Armor: ".. GAMEMODE.Config.currency .. string.Comma(MavArmorCost))
 		else
-			ArmorButton:SetPos(300-25,58)
-			ArmorButton:SetSize(100,50)
-			ArmorButton:SetText(" Armure: ".. GAMEMODE.Config.currency .. MavArmorCost)
+			ArmorButton:SetText(" Armure: ".. GAMEMODE.Config.currency .. string.Comma(MavArmorCost))
 		end
 		ArmorButton:SetTextColor(Color(255,255,255))
 		ArmorButton.Paint = function(self,w,h)
@@ -103,20 +118,8 @@ function NPCMenu()
 			net.SendToServer(ply)
 		end
 
-	local creatorButton = vgui.Create("DButton" , NPCPanel)
-	creatorButton:SetPos(335,140)
-	creatorButton:SetSize(75,25)
-	creatorButton:SetText("Creator")
-	creatorButton:SetTextColor(Color(255,255,255,255))
-	creatorButton.Paint = function(self,w,h)
-		draw.RoundedBox(0,0,0,w,h,Color(0,0,0,0))
-	end
-	creatorButton.DoClick = function()
-		gui.OpenURL("http://steamcommunity.com/profiles/76561198109963148")
-	end
-
 	local CloseButton = vgui.Create("DButton" , NPCPanel)
-	CloseButton:SetPos(375,4)
+	CloseButton:SetPos(500-25,4)
 	CloseButton:SetSize(20,20)
 	CloseButton:SetText(" X")
 	CloseButton:SetTextColor(Color(255,255,255,255))
