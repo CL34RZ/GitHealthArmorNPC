@@ -88,7 +88,7 @@ function NPCMenu()
 		else
 			HealthButton:SetText(" Santé: ".. GAMEMODE.Config.currency .. string.Comma(MavHealthCost))
 		end
-		HealthButton:SetTextColor(Color(255,255,255))
+		HealthButton:SetTextColor(CLTextColor)
 		HealthButton.Paint = function(self,w,h)
 			draw.RoundedBox(0,0,0,w,h,Color(0,0,0))
 			draw.RoundedBox(0,2,2,w-4,h-4,Color(150,0,0))
@@ -107,7 +107,7 @@ function NPCMenu()
 		else
 			ArmorButton:SetText(" Armure: ".. GAMEMODE.Config.currency .. string.Comma(MavArmorCost))
 		end
-		ArmorButton:SetTextColor(Color(255,255,255))
+		ArmorButton:SetTextColor(CLTextColor)
 		ArmorButton.Paint = function(self,w,h)
 			draw.RoundedBox(0,0,0,w,h,Color(0,0,0))
 			draw.RoundedBox(0,2,2,w-4,h-4,Color(0,0,150))

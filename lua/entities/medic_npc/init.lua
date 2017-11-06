@@ -27,7 +27,7 @@ function ENT:AcceptInput( name, activator, caller )
 	if name == "Use" and caller:IsPlayer() then
 		if not MedicIsFrench then
 			if MedicShouldSpeak then
-				activator:EmitSound("vo/npc/male01/hi02.wav",self:GetPos())
+				self:EmitSound("vo/npc/male01/hi02.wav",self:GetPos())
 			end
 		end
 		net.Start("mavshop")
