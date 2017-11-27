@@ -53,12 +53,12 @@ function BuyHealth(length, activator)
 	if activator:Health() < MavMaxHealth then
 		activator:addMoney(-MavHealthCost)
 		activator:SetHealth(MavMaxHealth)
+		hook.Run("Maverick_BuyHealth", activator, MavHealthCost)
 		if not MedicIsFrench then
 			DarkRP.notify(activator, 0, 4, "You have purchased health for " .. GAMEMODE.Config.currency ..  MavHealthCost .. "!")
 		else
 			DarkRP.notify(activator, 0, 4, "Vous avez acheté de la santé pour " .. GAMEMODE.Config.currency ..  MavHealthCost .. "!")
 		end
-		hook.Run("Maverick_BuyHealth", activator, MavHealthCost)
     else
     	if not MedicIsFrench then
     		DarkRP.notify(activator,1,4,"You have full health!")
@@ -84,12 +84,12 @@ function BuyArmor(length, activator)
 	if activator:Armor() < MavMaxArmor then
 		activator:addMoney(-MavArmorCost)
 		activator:SetArmor(MavMaxArmor)
+		hook.Run("Maverick_BuyArmor", activator, MavArmorCost)
 		if not MedicIsFrench then
 			DarkRP.notify(activator, 0, 4, "You have purchased Armor for " .. GAMEMODE.Config.currency ..  MavArmorCost .. "!")
 		else
 			DarkRP.notify(activator, 0, 4, "Vous avez achetez de l'armure " .. GAMEMODE.Config.currency ..  MavArmorCost .. "!")
 		end
-		hook.Run("Maverick_BuyArmor", activator, MavArmorCost)
     else
     	if not MedicIsFrench then
     		DarkRP.notify(activator,1,4,"You have full armor!")
