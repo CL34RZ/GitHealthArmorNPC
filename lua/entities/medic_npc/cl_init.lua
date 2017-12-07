@@ -55,8 +55,8 @@ function ENT:Draw()
 	ang:RotateAroundAxis(ang:Forward(), 180)
 	cam.Start3D2D(pos,ang,0.04)
 		draw.RoundedBox(6,-250-2,0-2,500+4,150+4,Color(255,255,255))
-		draw.RoundedBox(6,-250,0,500,150,lean_theme_bg)
-		draw.SimpleText("Medic NPC","medic_topText",0,75,lean_theme_text,1,1)
+		draw.RoundedBox(6,-250,0,500,150,Color(0,0,0))
+		draw.SimpleText("Medic NPC","medic_topText",0,75,Color(255,255,255),1,1)
 	cam.End3D2D()
 end
 
