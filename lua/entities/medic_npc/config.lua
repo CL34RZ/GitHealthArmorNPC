@@ -16,4 +16,6 @@ MavMaxArmor = 100 -- Used if you want the maximum armor to be above 100 (Cannot 
 MedicShouldSpeak = true -- Wether the medic should say "Hey" when you interact (doesn't effect french version)
 ---------------------------
 CLTextColor = Color(255,255,255) -- Color of all text
+---------------------------
+TextHoverColor = Color(50,50,50)
 ----Configuration End------

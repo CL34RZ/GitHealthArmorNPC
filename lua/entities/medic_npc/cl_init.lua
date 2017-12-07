@@ -16,45 +16,48 @@ surface.CreateFont("barTopInfo",{
 	font = "Arial",
 	antialias = true
 })
-surface.CreateFont("medicHeader",{
-	size = 50,
-	font = "Arial",
+surface.CreateFont("medic_topText", {
+	font = Arial,
+	size = 75,
 	antialias = true
 })
 
+local function leftlerp(self,w,h,speed,color)
+	self.left = (self.left or 0)
+	if self:IsHovered() then
+		self.left = Lerp(speed,self.left,w)
+	else
+		self.left = Lerp(speed,self.left,0)
+	end
+	draw.RoundedBox(0,0,0,self.left,h,color)
+end
+
+local function rightlerp(self,w,h,speed,color)
+	self.right = (self.right or w)
+	if self:IsHovered() then
+		self.right = Lerp(speed,self.right,0)
+	else
+		self.right = Lerp(speed,self.right,w)
+	end
+	draw.RoundedBox(0,self.right,0,w-self.right,h,color)
+end
+
 function ENT:Draw()
 	self.Entity:DrawModel()
-
-	local pos = self:GetPos()
-	local ang = self:GetAngles()
-	local distance = LocalPlayer():GetPos():Distance(pos) < 500
-
-	ang:RotateAroundAxis(ang:Up(),90)
-	ang:RotateAroundAxis(ang:Forward(),90)
-
-	if distance then
-		cam.Start3D2D(pos+ang:Up(),ang,0.1)
-			if not MedicIsFrench then
-				draw.RoundedBox(4,0-70,0-775,140,54,Color(0,0,0))
-				draw.RoundedBox(4,0-68,0-773,136,50,Color(255,255,255))
-				draw.SimpleText("Medic","MaverickFont",0,-750,Color(0,0,0),1,1)
-			else
-				draw.RoundedBox(4,0-80,0-775,160,54,Color(0,0,0))
-				draw.RoundedBox(4,0-78,0-773,156,50,Color(255,255,255))
-				draw.SimpleText("Medecin","MaverickFont",0,-750,Color(0,0,0),1,1)
-			end
-		cam.End3D2D()
-
-		ang:RotateAroundAxis(ang:Right(),-180)
-
-		cam.Start3D2D(pos+ang:Up()*-1,ang,0.1)
-			if not MedicIsFrench then
-				draw.SimpleText("Medic","MaverickFont",0,-750,Color(0,0,0),1,1)
-			else
-				draw.SimpleText("Medecin","MaverickFont",0,-750,Color(0,0,0),1,1)
-			end
-		cam.End3D2D()
-	end
+	local mypos = self:GetPos()
+	if (LocalPlayer():GetPos():Distance(mypos) >= 1000) then return end
+	local offset = Vector(0, 0, 80)
+	local pos = mypos + offset
+	local ang = (LocalPlayer():EyePos() - pos):Angle()
+	ang.p = 0
+	ang:RotateAroundAxis(ang:Right(), 90)
+	ang:RotateAroundAxis(ang:Up(), 90)
+	ang:RotateAroundAxis(ang:Forward(), 180)
+	cam.Start3D2D(pos,ang,0.04)
+		draw.RoundedBox(6,-250-2,0-2,500+4,150+4,Color(255,255,255))
+		draw.RoundedBox(6,-250,0,500,150,lean_theme_bg)
+		draw.SimpleText("Medic NPC","medic_topText",0,75,lean_theme_text,1,1)
+	cam.End3D2D()
 end
 
 function NPCMenu()
@@ -89,9 +92,10 @@ function NPCMenu()
 			HealthButton:SetText(" Santé: ".. GAMEMODE.Config.currency .. string.Comma(MavHealthCost))
 		end
 		HealthButton:SetTextColor(CLTextColor)
+		local leftlerp = (leftlerp or 0)
 		HealthButton.Paint = function(self,w,h)
-			draw.RoundedBox(0,0,0,w,h,Color(0,0,0))
-			draw.RoundedBox(0,2,2,w-4,h-4,Color(150,0,0))
+			draw.RoundedBox(0,0,0,w,h,Color(150,0,0))
+			leftlerp(self,w+1,h,0.02,TextHoverColor)
 		end
 		HealthButton.DoClick = function()
 			NPCPanel:Close()
@@ -109,8 +113,8 @@ function NPCMenu()
 		end
 		ArmorButton:SetTextColor(CLTextColor)
 		ArmorButton.Paint = function(self,w,h)
-			draw.RoundedBox(0,0,0,w,h,Color(0,0,0))
-			draw.RoundedBox(0,2,2,w-4,h-4,Color(0,0,150))
+			draw.RoundedBox(0,0,0,w,h,Color(0,0,150))
+			rightlerp(self,w+1,h,0.02,TextHoverColor)
 		end
 		ArmorButton.DoClick = function()
 			NPCPanel:Close()
@@ -121,10 +125,10 @@ function NPCMenu()
 	local CloseButton = vgui.Create("DButton" , NPCPanel)
 	CloseButton:SetPos(500-25,4)
 	CloseButton:SetSize(20,20)
-	CloseButton:SetText(" X")
+	CloseButton:SetText("X")
 	CloseButton:SetTextColor(Color(255,255,255,255))
 	CloseButton.Paint = function(self,w,h)
-		draw.RoundedBox(50,0,0,w,h,Color(255,0,0))
+		draw.RoundedBox(150,0,0,w-1,h,Color(255,0,0))
 	end
 	CloseButton.DoClick = function()
 		NPCPanel:Close()
