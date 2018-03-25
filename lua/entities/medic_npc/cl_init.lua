@@ -6,40 +6,27 @@ function ENT:Initialize()
 	self.AutomaticFrameAdvance = true
 end
 
-surface.CreateFont("MaverickFont", {
-	size = 55,
-	font = "Impact",
-	antialias = true
-})
-surface.CreateFont("barTopInfo",{
-	size = 25,
-	font = "Arial",
-	antialias = true
-})
 surface.CreateFont("medic_topText", {
 	font = Arial,
 	size = 75,
 	antialias = true
 })
 
-local function leftlerp(self,w,h,speed,color)
-	self.left = (self.left or 0)
+local function fadelerp(self,w,h,speed,color)
+	self.fade = (self.fade or 0)
 	if self:IsHovered() then
-		self.left = Lerp(speed,self.left,w)
+		self.fade = Lerp(speed,self.fade,255)
 	else
-		self.left = Lerp(speed,self.left,0)
+		self.fade = Lerp(speed,self.fade,0)
 	end
-	draw.RoundedBox(0,0,0,self.left,h,color)
+	color.a = self.fade
+	draw.RoundedBox(0,0,0,w,h,color)
 end
-
-local function rightlerp(self,w,h,speed,color)
-	self.right = (self.right or w)
-	if self:IsHovered() then
-		self.right = Lerp(speed,self.right,0)
-	else
-		self.right = Lerp(speed,self.right,w)
-	end
-	draw.RoundedBox(0,self.right,0,w-self.right,h,color)
+local lang
+if MedicIsFrench then
+	lang = {health = "Santé:",armor = "Armure:",overhead = "Médical"}
+else
+	lang = {health = "Health:",armor = "Armor:",overhead = "Medic"}
 end
 
 function ENT:Draw()
@@ -56,82 +43,59 @@ function ENT:Draw()
 	cam.Start3D2D(pos,ang,0.04)
 		draw.RoundedBox(6,-250-2,0-2,500+4,150+4,Color(255,255,255))
 		draw.RoundedBox(6,-250,0,500,150,Color(0,0,0))
-		draw.SimpleText("Medic NPC","medic_topText",0,75,Color(255,255,255),1,1)
+		draw.SimpleText(lang.overhead,"medic_topText",0,75,Color(255,255,255),1,1)
 	cam.End3D2D()
 end
 
 function NPCMenu()
-	local NPCPanel = vgui.Create("DFrame")
-	NPCPanel:SetSize(500,260)
-	NPCPanel:SetDraggable(true)
-	NPCPanel:SetTitle("")
-	NPCPanel:MakePopup()
-	NPCPanel:SetSizable(false)
-	NPCPanel:SetDeleteOnClose(false)
-	NPCPanel:ShowCloseButton(false)
-	NPCPanel:Center()
-	NPCPanel.Paint = function(self,w,h)
+	local main = vgui.Create("DFrame")
+	main:MakePopup()
+	main:SetSize(ScrW()*0.25,ScrH()*0.1)
+	main:Center()
+	main:SetTitle("")
+	main:ShowCloseButton(false)
+	main.Paint = function(self,w,h)
 		Derma_DrawBackgroundBlur(self)
-		draw.RoundedBox(8,0,0,w,h,MavPanelBorder)
-		draw.RoundedBox(8,2,2,w-4,h-4,MavPanelColor)
-		if not MedicIsFrench then
-			draw.SimpleText("Let's get you patched up then shall we?","barTopInfo",250,100,Color(255,255,255),1,1)
-			draw.SimpleTextOutlined("Medic","medicHeader",250,50,Color(255,255,255),1,1,2,Color(0,0,0))
-		else
-			draw.SimpleText("Allons-nous vous remémer, alors devons-nous?","barTopInfo",250,100,Color(255,255,255),1,1)
-			draw.SimpleTextOutlined("Medecin","medicHeader",250,50,Color(255,255,255),1,1,2,Color(0,0,0))
-		end
+		draw.RoundedBox(0,0,0,w,h,MavPanelBorder)
+		draw.RoundedBox(0,2,2,w-4,h-4,MavPanelColor)
 	end
-
-	local HealthButton = vgui.Create("DButton", NPCPanel)
-		HealthButton:SetPos(25,175)
-		HealthButton:SetSize(125,50)
-		if not MedicIsFrench then
-			HealthButton:SetText(" Health: ".. GAMEMODE.Config.currency .. string.Comma(MavHealthCost))
-		else
-			HealthButton:SetText(" Santé: ".. GAMEMODE.Config.currency .. string.Comma(MavHealthCost))
-		end
-		HealthButton:SetTextColor(CLTextColor)
-		local leftlerp = (leftlerp or 0)
-		HealthButton.Paint = function(self,w,h)
-			draw.RoundedBox(0,0,0,w,h,Color(150,0,0))
-			leftlerp(self,w+1,h,0.02,TextHoverColor)
-		end
-		HealthButton.DoClick = function()
-			NPCPanel:Close()
-			net.Start("mavgivehealth")
-			net.SendToServer(ply)
-		end
-
-	local ArmorButton = vgui.Create("DButton", NPCPanel)
-		ArmorButton:SetPos(500-150,175)
-		ArmorButton:SetSize(125,50)
-		if not MedicIsFrench then
-			ArmorButton:SetText(" Armor: ".. GAMEMODE.Config.currency .. string.Comma(MavArmorCost))
-		else
-			ArmorButton:SetText(" Armure: ".. GAMEMODE.Config.currency .. string.Comma(MavArmorCost))
-		end
-		ArmorButton:SetTextColor(CLTextColor)
-		ArmorButton.Paint = function(self,w,h)
-			draw.RoundedBox(0,0,0,w,h,Color(0,0,150))
-			rightlerp(self,w+1,h,0.02,TextHoverColor)
-		end
-		ArmorButton.DoClick = function()
-			NPCPanel:Close()
-			net.Start("mavgivearmor")
-			net.SendToServer(ply)
-		end
-
-	local CloseButton = vgui.Create("DButton" , NPCPanel)
-	CloseButton:SetPos(500-25,4)
-	CloseButton:SetSize(20,20)
-	CloseButton:SetText("X")
-	CloseButton:SetTextColor(Color(255,255,255,255))
-	CloseButton.Paint = function(self,w,h)
-		draw.RoundedBox(150,0,0,w-1,h,Color(255,0,0))
+	local close = vgui.Create("DButton",main)
+	close:SetSize(25,25)
+	close:SetPos(main:GetWide()-close:GetWide()-4,4)
+	close:SetText("")
+	close.Paint = function(self,w,h)
+		draw.RoundedBox(0,0,0,w,h,MedicCloseBtnCol)
+		fadelerp(self,w,h,FrameTime()*2,MedicCloseBtnFade)
+		draw.SimpleText("X",Default,w/2,h/2,MedicCloseBtnTextCol,1,1)
 	end
-	CloseButton.DoClick = function()
-		NPCPanel:Close()
+	close.DoClick = function()
+		main:Close()
+	end
+	local health = vgui.Create("DButton",main)
+	health:SetSize(main:GetWide()*0.3,main:GetTall()*0.5)
+	health:SetPos(main:GetWide()*0.1,main:GetTall()/2-health:GetTall()/2)
+	health:SetText("")
+	health.Paint = function(self,w,h)
+		draw.RoundedBox(0,0,0,w,h,MedicHealthCol)
+		fadelerp(self,w,h,FrameTime()*2,MedicHealthFade)
+		draw.SimpleText(lang.health .. " " .. GAMEMODE.Config.currency .. MavHealthCost,"Trebuchet18",w/2,h/2,MedicHealthTextCol,1,1)
+	end
+	health.DoClick = function()
+		net.Start("mavgivehealth")
+		net.SendToServer()
+	end
+	local armor = vgui.Create("DButton",main)
+	armor:SetSize(main:GetWide()*0.3,main:GetTall()*0.5)
+	armor:SetPos(main:GetWide()*0.6,main:GetTall()/2-armor:GetTall()/2)
+	armor:SetText("")
+	armor.Paint = function(self,w,h)
+		draw.RoundedBox(0,0,0,w,h,MedicArmorCol)
+		fadelerp(self,w,h,FrameTime()*2,MedicArmorFade)
+		draw.SimpleText(lang.armor .. " " .. GAMEMODE.Config.currency .. MavArmorCost,"Trebuchet18",w/2,h/2,MedicArmorTextCol,1,1)
+	end
+	armor.DoClick = function()
+		net.Start("mavgivearmor")
+		net.SendToServer()
 	end
 end
 net.Receive("mavshop", NPCMenu)
