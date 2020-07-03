@@ -32,6 +32,7 @@ function ENT:AcceptInput( name, activator, caller )
 		end
 		net.Start("mavshop")
 		net.Send(caller)
+		caller.mavRecentNPC = self
 	end
 end
 
@@ -39,7 +40,17 @@ function ENT:OnTakeDamage()
 	return false
 end
 
-function BuyHealth(length, activator)
+local function AllowedTo(ply)
+	if !ply || !ply:IsValid() then return false end
+	local ent = ply.mavRecentNPC
+	if !ent || !ent:IsValid() then return false end
+	if ply:GetPos():Distance(ent:GetPos()) > 250 then return false end
+	return true
+end
+
+local function BuyHealth(length, activator)
+
+	if !AllowedTo(activator) then return end
     
  	if ! activator:canAfford(MavHealthCost) then
 		if not MedicIsFrench then
@@ -53,7 +64,7 @@ function BuyHealth(length, activator)
 	if activator:Health() < MavMaxHealth then
 		activator:addMoney(-MavHealthCost)
 		activator:SetHealth(MavMaxHealth)
-		hook.Run("Maverick_BuyHealth", activator, MavHealthCost)
+		hook.Run("bLogs_Maverick_BuyHealth", activator, MavHealthCost)
 		if not MedicIsFrench then
 			DarkRP.notify(activator, 0, 4, "You have purchased health for " .. GAMEMODE.Config.currency ..  MavHealthCost .. "!")
 		else
@@ -70,7 +81,9 @@ function BuyHealth(length, activator)
 end
 net.Receive("mavgivehealth", BuyHealth)
 
-function BuyArmor(length, activator)
+local function BuyArmor(length, activator)
+
+	if !AllowedTo(activator) then return end
     
  	if ! activator:canAfford(MavArmorCost) then
 		if not MedicIsFrench then
@@ -84,7 +97,7 @@ function BuyArmor(length, activator)
 	if activator:Armor() < MavMaxArmor then
 		activator:addMoney(-MavArmorCost)
 		activator:SetArmor(MavMaxArmor)
-		hook.Run("Maverick_BuyArmor", activator, MavArmorCost)
+		hook.Run("bLogs_Maverick_BuyArmor", activator, MavArmorCost)
 		if not MedicIsFrench then
 			DarkRP.notify(activator, 0, 4, "You have purchased Armor for " .. GAMEMODE.Config.currency ..  MavArmorCost .. "!")
 		else
