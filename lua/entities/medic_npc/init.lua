@@ -44,7 +44,7 @@ local function AllowedTo(ply)
 	if !ply || !ply:IsValid() then return false end
 	local ent = ply.mavRecentNPC
 	if !ent || !ent:IsValid() then return false end
-	if ply:GetPos():Distance(ent:GetPos()) > 250 then return false end
+	if ply:GetPos():DistToSqr(ent:GetPos()) > 250*250 then return false end
 	return true
 end
 
