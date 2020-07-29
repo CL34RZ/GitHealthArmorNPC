@@ -40,10 +40,11 @@ end)
 local white = color_white
 local black = Color(0,0,0)
 local mainOffset = Vector(0, 0, 80)
+local dist =  1000*1000
 function ENT:Draw()
 	self.Entity:DrawModel()
 	local mypos = self:GetPos()
-	if (localPly:GetPos():DistToSqr(mypos) >= 2000) then return end
+	if (localPly:GetPos():DistToSqr(mypos) >= dist) then return end
 	local offset = mainOffset
 	local pos = mypos + offset
 	local ang = (localPly:EyePos() - pos):Angle()
